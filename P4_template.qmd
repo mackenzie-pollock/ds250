@@ -1,0 +1,267 @@
+---
+title: "Client Report - Can You Predict That?"
+subtitle: "Course DS 250"
+author: "[STUDENT NAME]"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+
+!pip install matplotlib
+
+jupyter: python3
+execute:
+  python: "/Users/mackenziepollock/ds250_env/bin/python3"
+---
+---
+
+```{python}
+import sys
+print(sys.executable)
+
+```
+
+```{python}
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+from lets_plot import *
+ 
+# add the additional libraries you need to import for ML here
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+df = pd.read_csv("https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv")
+
+```
+
+## Elevator pitch
+_A SHORT (2-3 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS._ (Note: this is not a summary of the project, but a summary of the results.)
+
+_A Client has requested this analysis and this is your one shot of what you would say to your boss in a 2 min elevator ride before he takes your report and hands it to the client._
+
+## QUESTION|TASK 1
+
+__Create 2-3 charts that evaluate potential relationships between the home variables and `before1980`.__ Explain what you learn from the charts that could help a machine learning algorithm. 
+
+_type your results and analysis here_
+
+```{python}
+# Include and execute your code here
+average_square_footage = df.groupby("before1980")["livearea"].mean()
+plt.bar(average_square_footage.index, average_square_footage.values)
+plt.title("Average Square Footage by Construction Era")
+plt.xlabel("before1980")
+plt.ylabel("Square Footage")
+plt.show()
+plt.tight_layout()
+plt.show()
+
+
+print("Column names in df:", df.columns.tolist())
+
+
+before_1980 = df[df["before1980"] == 1]["sprice"]
+after_1980 = df[df["before1980"] == 0]["sprice"]
+
+
+plt.boxplot([before_1980, after_1980], labels=["Before 1980", "After 1980"])
+plt.title("House Price Distribution by Construction Era")
+plt.ylabel("Sale Price")
+plt.tight_layout()
+plt.show()
+
+```
+
+## QUESTION|TASK 2
+
+__Build a classification model labeling houses as being built “before 1980” or “during or after 1980”.__ Your goal is to reach or exceed 90% accuracy. Explain your final model choice (algorithm, tuning parameters, etc) and describe what other models you tried.  
+
+_type your results and analysis here_
+I chose the Random Forest Classifier as my final model because it consistently outperformed other models and reached a final accuracy of 89.98%, which is very close to the target of 90%. After experimenting with tree depth, minimum leaf size, and number of estimators, the most effective configuration was n_estimators=300, max_depth=20, and min_samples_leaf=1. I tested other models including Decision Tree, Logistic Regression, and KNN, but Random Forest offered the best balance of accuracy and generalization. Further tuning could increase accuracy slightly, but this model provides strong predictive power and meets the project objectives.
+
+
+```{python}
+import sys
+!{sys.executable} -m pip install scikit-learn
+
+```
+```{python}
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+features = ["livearea", "sprice", "finbsmnt", "basement", "numbdrm", "numbaths", "stories"]
+X = df[features]
+y = df["before1980"]
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+final_model = RandomForestClassifier(
+    n_estimators=300,
+    max_depth=20,
+    min_samples_leaf=1,
+    random_state=42
+)
+final_model.fit(X_train, y_train)
+y_pred = final_model.predict(X_test)
+final_acc = accuracy_score(y_test, y_pred)
+print("Final Tuned Accuracy:", round(final_acc * 100, 2), "%")
+
+
+
+```
+
+
+## QUESTION|TASK 3
+
+__Justify your classification model by discussing the most important features selected by your model.__ This discussion should include a feature importance chart and a description of the features. 
+
+_type your results and analysis here_
+
+The Random Forest model shows which features mattered most in making predictions. In this case, sale price and living area were the top factors, which makes sense since older homes often have different prices and sizes. Bathroms, bedrooms, basements, and stories also helped, since home layouts and styles have changed over time.
+
+```{python}
+# Include and execute your code here
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+importances = final_model.feature_importances_
+feature_names = X.columns
+
+
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": importances
+}).sort_values(by="Importance", ascending=False)
+
+
+print(importance_df)
+
+plt.figure(figsize=(8, 6))
+plt.barh(importance_df["Feature"], importance_df["Importance"])
+plt.title("Feature Importance")
+plt.xlabel("Importance Score")
+plt.ylabel("Feature")
+plt.gca().invert_yaxis()  
+plt.tight_layout()
+plt.show()
+
+```
+
+
+## QUESTION|TASK 4
+
+__Describe the quality of your classification model using 2-3 different evaluation metrics.__ You also need to explain how to interpret each of the evaluation metrics you use.  
+
+_type your results and analysis here_
+My model had a precision of 92%, recall of 92.03%, and F1 scorof 92.01%, showing that it performs well across multiple measures — not just accuracy.
+
+```{python}
+# Include and execute your code here
+from sklearn.metrics import precision_score, recall_score, f1_score
+
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+print("Precision:", round(precision * 100, 2), "%")
+print("Recall:", round(recall * 100, 2), "%")
+print("F1 Score:", round(f1 * 100, 2), "%")
+
+```
+
+---
+
+## STRETCH QUESTION|TASK 1
+
+__Repeat the classification model using 3 different algorithms.__ Display their Feature Importance, and Decision Matrix. Explian the differences between the models and which one you would recommend to the Client.   
+
+_type your results and analysis here_
+I tested three additional classification models. Logistic Regression, K-Nearest Neighbors, and Support Vector Machine. I did this to compare their performance against my Random Forest model.
+Logistic Regression performed well, but didn’t the relationships as effectively.
+KNN had the lowest accuracy, because of its sensitivity to crazy data and distance-based decisions.
+SVM performed better than KNN and LR, but still didn't outperform Random Forest.
+Overall, Random Forest still had the highest accuracy and best balance of precision and recall, so I kept it as my final model choice.
+
+```{python}
+# Include and execute your code here
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC 
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+def evaluate_model(model, name):
+  model.fit(X_train, y_train)
+  y_pred = model.predict(X_test)
+
+  acc = accuracy_score(y_test, y_pred)
+  prec = precision_score(y_test, y_pred)
+  rec = recall_score(y_test, y_pred)
+  f1 = f1_score(y_test, y_pred)
+
+  print(f"\n{name} Results:")
+  print(f"Accuracy: {round(acc*100, 2)}%")
+  print(f"Precision: {round(prec*100, 2)}%")
+  print(f"Recall: {round(rec*100, 2)}%")
+  print(f"F1 Score: {round(f1*100, 2)}%")
+
+lr_model = LogisticRegression(max_iter=1000)
+evaluate_model(lr_model, "Logistic Regression")
+
+knn_model = KNeighborsClassifier(n_neighbors=5)
+evaluate_model(knn_model, "k-Nearest Neighbors")
+svm_model = SVC(kernel='rbf')
+evaluate_model(svm_model, "support Vector Machine")
+```
+
+
+## STRETCH QUESTION|TASK 2
+
+__Join the `dwellings_neighborhoods_ml.csv` data to the `dwelling_ml.csv` on the `parcel` column to create a new dataset. Duplicate the code for the stretch question above and update it to use this data.__ Explain the differences and if this changes the model you recomend to the Client.   
+
+_type your results and analysis here_
+
+```{python}
+# Include and execute your code here
+
+
+```
+
+
+## STRETCH QUESTION|TASK 3
+
+__Can you build a model that predicts the year a house was built?__ Explain the model and the evaluation metrics you would use to determine if the model is good.  
+
+_type your results and analysis here_
+
+```{python}
+# Include and execute your code here
+
+
+```
+
+---

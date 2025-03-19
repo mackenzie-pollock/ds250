@@ -1,0 +1,167 @@
+---
+title: "untitled"
+format: html
+---
+
+```{python}
+import matplotlib as plt
+```
+
+```{python}
+import pandas as pd
+import numpy as np
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+
+```{python}
+
+df = pd.read_csv("https://byui-cse.github.io/cse110-course/lesson11/life-expectancy.csv")
+df.columns = ["Entity", "Code", "Year", "Life"]
+
+```
+to reference certain poieces of a dataset
+
+```{python}
+# Include and execute your code here
+df.Entity[1]
+df[1:3]
+df[ :3]
+df['Entity'] #includes just a column name
+df['Entity'].head()
+
+
+```
+
+
+```{python}
+# Include and execute your code here
+df.columns = ['Entity', 'Code', 'Year', 'Life']
+
+
+```
+
+```{python}
+df.loc[11:21, 'Year'] #Using year's column # won't work
+my_new_data = df.loc[11:16, ['Life', 'Year']] #note the reordered columns
+
+```
+
+
+```{python}
+# Include and execute your code here
+
+df.iloc[20:30, [0,3]]
+df.iloc[ :4, [0,3]]
+df.iloc[ :4, : ]
+df.iloc[-2: , :]
+```
+
+
+
+```{python}
+df.query('Entity== "France"')
+df.query("Entity == 'France'")
+#or
+df[df['Entity'] == "Afganistan"]
+
+df.query('Entity ==["France", "United States", "Japan"]') #shortcut by providing a list
+
+#or
+three_countries = df[df['Entity'] .isin(["France", "United States", "Japan"])]
+three_countries['Entity'].value_counts()
+
+df.query('Year >= 200 & Year <=2015')
+
+#not equals
+df.query('Entity != "Zimbabwe"')
+
+```
+
+```{python}
+top5_mean = df.sort_values(["Year", "Life"], ascending = False).head(5).Life.mean()
+df.Entity.value_counts()
+df.Entity.unique().shape[0] ## of unique countries in the dataset
+```
+
+
+```{python}
+#usa = df.query('Entity == "United States"')
+usa = df.query('Entity == "United States"')
+(
+    ggplot(data = usa,
+            mapping = aes(x = 'Life')) +
+            geom_histogram()
+)
+
+```
+
+
+
+## Day 2
+### Creat the usa dataset
+
+
+```{python}
+usa = df.query('Entity == "United States"')
+(
+    ggplot(data = usa,
+            mapping = aes(x = 'Life')) +
+            geom_histogram()
+)
+```
+## Task 1 USA life expectancy
+```{python}
+
+usa2 = usa.query('Year > 1920 & Year <=2000')
+(
+    ggplot(data = usa2, 
+            mapping = aes(x = "Year", y = "Life")) +
+            geom_line()
+)
+```
+
+Or you can change 
+
+```{python}
+p= (
+    ggplot(data = usa, 
+    mapping = aes(x= 'Year', y = 'Life')) + 
+    geom_line() + 
+    geom_rect(xmin = 1918, xmax = 1920, ymin = 46, ymax = 55, fill = "red", alpha = .2) + 
+    geom_vline(xintercept = 1943, color = "red", linetype = 2) +
+    geom_text(label = "Last decrease in 1943", x = 1947, y = 55, angel = 90) +
+    labs(y = "Life Expectancy (yrs)", title = "United States") +
+    theme_classic() + 
+    theme(plot_title= element_text(hjust = .5, size = 38, color= "blue" ), 
+    panel_grid = element_blank())
+
+    
+
+)
+```
+
+
+
+
+## practice marketing 
+```{python}
+
+p + theme(axis_title_x = element_blank())
+```
+
+
+### graphing more than one -----
+1 line per country
+
+```{python}
+three = df.query('Entity == ["United States", "Japan", "France"]')
+(
+    ggplot(data = three, 
+    mapping = aes(x = 'Year', y = 'Life', color = 'Entity')) + 
+    geom_line()
+)
+```

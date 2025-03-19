@@ -1,0 +1,74 @@
+```{python}
+# Read in libraries
+import pandas as pd
+import numpy as np
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+
+
+
+
+# read in df
+url = 'https://raw.githubusercontent.com/byuidatascience/data4names/master/data-raw/names_year/names_year.csv'
+df = pd.read_csv(url)
+```
+
+```{python}
+# Check if 'Oliver' is in the dataset
+oliver_check = df[df['name'].str.contains('Oliver', case=False, na=False)]
+print(oliver_check)
+
+```
+## calculating the names of oliver in utah
+
+```{python}
+
+# Filter for records where the name is 'Oliver'
+oliver_data = df[df['name'] == 'Oliver']
+
+# Calculate the total number of babies named 'Oliver' in Utah (state code 'UT')
+total_oliver_utah = oliver_data['UT'].sum()
+
+# Print the result
+print(total_oliver_utah)
+
+
+```
+
+```{python}
+import pandas as pd
+
+print(df.head())
+
+# URL of the dataset
+url = 'https://raw.githubusercontent.com/byuidatascience/data4names/master/data-raw/names_year/names_year.csv'
+
+# Read the CSV file
+df = pd.read_csv(url)
+
+
+# Calculate the total count
+oliver_utah = df[(df['name'] == 'Oliver') & (df['UT'] > 0)]  # Filter for Oliver and non-zero count in Utah
+total_oliver_utah = oliver_utah['UT'].sum()  # Sum the values in the 'UT' column to get the total
+print(total_oliver_utah)
+
+
+
+
+```
+
+
+
+```{python}
+# Filter for records where the name is 'Felicia'
+felisha_data = df[df['name'] == 'Felisha']
+
+# Find the earliest year when the name 'Felicia' was used
+earliest_year = felisha_data['year'].min()
+
+# Print the result
+print(f"The earliest year the name 'Felisha' was used is: {earliest_year}")
+
+
+```
