@@ -1,0 +1,10 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "My DS250 Project"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home

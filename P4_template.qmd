@@ -29,9 +29,6 @@ project:
 ---
 ---
 
-```{python}
-!pip install matplotlib
-```
 
 ```{python}
 import pandas as pd 
