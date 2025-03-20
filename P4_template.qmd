@@ -24,6 +24,9 @@ execute:
   warning: false
 
 
+project:
+  type: website
+  output-dir: docs
 
 
 
