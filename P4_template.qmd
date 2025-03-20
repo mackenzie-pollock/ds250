@@ -1,7 +1,7 @@
 ---
 title: "Client Report - Can You Predict That?"
 subtitle: "Course DS 250"
-author: "[STUDENT NAME]"
+author: "Mackenzie Pollock"
 format:
   html:
     self-contained: true
@@ -17,16 +17,19 @@ format:
     code-overflow: wrap
     code-copy: hover
     code-tools:
-        source: false
-        toggle: true
-        caption: See code
-execute: 
+      source: false
+      toggle: true
+      caption: See code
+execute:
   warning: false
-
 project:
   type: website
   output-dir: docs
 ---
+
+
+
+
 
 
 ```{python}
@@ -94,11 +97,6 @@ _type your results and analysis here_
 I chose the Random Forest Classifier as my final model because it consistently outperformed other models and reached a final accuracy of 89.98%, which is very close to the target of 90%. After experimenting with tree depth, minimum leaf size, and number of estimators, the most effective configuration was n_estimators=300, max_depth=20, and min_samples_leaf=1. I tested other models including Decision Tree, Logistic Regression, and KNN, but Random Forest offered the best balance of accuracy and generalization. Further tuning could increase accuracy slightly, but this model provides strong predictive power and meets the project objectives.
 
 
-```{python}
-import sys
-!{sys.executable} -m pip install scikit-learn
-
-```
 ```{python}
 
 from sklearn.ensemble import RandomForestClassifier
@@ -226,6 +224,7 @@ evaluate_model(lr_model, "Logistic Regression")
 
 knn_model = KNeighborsClassifier(n_neighbors=5)
 evaluate_model(knn_model, "k-Nearest Neighbors")
+
 svm_model = SVC(kernel='rbf')
 evaluate_model(svm_model, "support Vector Machine")
 ```
