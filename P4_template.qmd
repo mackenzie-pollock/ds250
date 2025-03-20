@@ -22,14 +22,9 @@ format:
         caption: See code
 execute: 
   warning: false
-
-
 project:
   type: website
   output-dir: docs
-
-
-
 ---
 ---
 
