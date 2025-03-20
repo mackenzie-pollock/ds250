@@ -22,11 +22,6 @@ format:
         caption: See code
 execute: 
   warning: false
-
-
-
-
-
 ---
 ---
 
