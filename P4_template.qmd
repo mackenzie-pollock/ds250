@@ -37,8 +37,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from lets_plot import *
- 
-# add the additional libraries you need to import for ML here
 
 LetsPlot.setup_html(isolated_frame=True)
 ```
@@ -119,8 +117,6 @@ final_model.fit(X_train, y_train)
 y_pred = final_model.predict(X_test)
 final_acc = accuracy_score(y_test, y_pred)
 print("Final Tuned Accuracy:", round(final_acc * 100, 2), "%")
-
-
 
 ```
 
