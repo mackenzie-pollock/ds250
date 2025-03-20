@@ -22,7 +22,7 @@ format:
         caption: See code
 execute: 
   warning: false
-    
+!pip install plotnine
 ---
 
 ```{python}
@@ -63,21 +63,20 @@ _type your results and analysis here_
 
 # (ggplot(mpg, aes(x="displ", y="hwy")) + geom_point())
 mackenzie_df = df.query('name == "Mackenzie" and year >= 1900 and year <= 2015')
-# print(mackenzie_df)
-# (ggplot(mackenzie_df, mapping=aes(x="year", y="Total")) + geom_point())
 
-
-(ggplot(mackenzie_df, aes(x="year", y="Total")) +
+(
+    ggplot(mackenzie_df, aes(x="year", y="Total")) +
     geom_point() +
     geom_line(color="blue", size=1) +
-    scale_x_continuous(limits=[1900, 2015], breaks=range(1900, 2021, 15)) +
+    scale_x_continuous(limits=[1900, 2015], breaks=list(range(1900, 2021, 15))) +
     labs(
-        title="Popularity of the Name Mackenzie (1900-2015)",
-        x="year",
+        title="Popularity of the Name Mackenzie (1900–2015)",
+        x="Year",
         y="Number of Babies Named Mackenzie"
     ) +
     theme_minimal()
 )
+
 ```
 
 
@@ -90,18 +89,44 @@ _type your results and analysis here_
 ```{python}
 # Include and execute your code here
 
+names = ["Brittany"]
 
-names = ["Mary", "Martha", "Peter", "Paul"]
-biblical_df = df.query('Entity in @names and Year >= 1920 and Year <= 2000')
+brittany_df = df.query('name in @names and year >= 1920 and year <= 2000')
 
-p = (ggplot(names_df, aes(x="Code", y="Count", color="Entity")) +
-     geom_line(size=1) +
-     scale_x_continuous(limits=[1920, 2000], breaks=range(1920, 2001, 10)) +
-     labs(title="Name Popularity of Mary, Martha, Peter, and Paul (1920-2000)",
-          x="Year", y="Number of Babies Named") +
-     theme_minimal())
+
+peak_row = brittany_df.loc[brittany_df['Total'].idxmax()]
+peak_year = peak_row['year']
+peak_count = peak_row['Total']
+
+from plotnine import (
+    ggplot, aes, geom_line, geom_vline, geom_text,
+    labs, theme_minimal, scale_x_continuous
+)
+import pandas as pd  
+
+
+label_df = pd.DataFrame({
+    'x': [peak_year],
+    'y': [peak_count + 500],
+    'label': [f"Peak Year: {peak_year}"]
+})
+
+#  plot
+p = (
+    ggplot(brittany_df, aes(x="year", y="Total", color="name")) +
+    geom_line(size=1) +
+    geom_vline(xintercept=peak_year, linetype='dashed', color='gray') +
+    geom_text(data=label_df, mapping=aes(x='x', y='y', label='label'), inherit_aes=False, size=8) +
+    scale_x_continuous(limits=[1920, 2000], breaks=list(range(1920, 2001, 10))) +
+    labs(title="Name Popularity of Brittany (1920–2000)",
+         x="Year", y="Number of Babies Named") +
+    theme_minimal()
+)
 
 p.show()
+
+
+
 
 ```
 
@@ -130,31 +155,31 @@ _type your results and analysis here_
 
 ```{python}
 # Include and execute your code here
-library(tidyverse)
+# library(tidyverse)
 
-name_data <- tibble(
-  year = 1920:2020,
-  popularity = c(10, 12, 15, 18, 22, 30, 45, 60, 65, 75, 80, 90, 100, 120, 135, 150, 160, 180, 190, 210,
-                 230, 250, 275, 300, 320, 350, 400, 440, 460, 490, 500, 600, 700, 750, 780, 800, 820, 850, 
-                 900, 950, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2500, 2800, 3000, 3200, 3500, 4000, 4500,
-                 5000, 5200, 5400, 5600, 5900, 6000, 6100, 6000, 5900, 5700, 5500, 5300, 5100, 5000, 4800, 4600,
-                 4400, 4200, 4000, 3800, 3600, 3400, 3200, 3000, 2800, 2600, 2400, 2200, 2100, 2000, 1900, 1800,
-                 1700, 1600, 1500, 1400, 1300, 1200, 1100, 1000, 950, 900, 860, 830, 800, 780, 760, 740, 720,
-                 710, 690, 670, 650, 630, 610, 590, 570, 550, 530, 510, 490, 470, 450, 430, 410, 390, 370, 350)
-)
+# name_data <- tibble(
+#   year = 1920:2020,
+#   popularity = c(10, 12, 15, 18, 22, 30, 45, 60, 65, 75, 80, 90, 100, 120, 135, 150, 160, 180, 190, 210,
+#                  230, 250, 275, 300, 320, 350, 400, 440, 460, 490, 500, 600, 700, 750, 780, 800, 820, 850, 
+#                  900, 950, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2500, 2800, 3000, 3200, 3500, 4000, 4500,
+#                  5000, 5200, 5400, 5600, 5900, 6000, 6100, 6000, 5900, 5700, 5500, 5300, 5100, 5000, 4800, 4600,
+#                  4400, 4200, 4000, 3800, 3600, 3400, 3200, 3000, 2800, 2600, 2400, 2200, 2100, 2000, 1900, 1800,
+#                  1700, 1600, 1500, 1400, 1300, 1200, 1100, 1000, 950, 900, 860, 830, 800, 780, 760, 740, 720,
+#                  710, 690, 670, 650, 630, 610, 590, 570, 550, 530, 510, 490, 470, 450, 430, 410, 390, 370, 350)
+# )
 
-release_years <- c(1977, 1980, 1983, 1999, 2002, 2005)
-
-
+# release_years <- c(1977, 1980, 1983, 1999, 2002, 2005)
 
 
-ggplot(name_data, aes(x = year, y = popularity)) +
-  geom_line(color = 'blue') +
-  geom_point(data = name_data %>% filter(year %in% release_years), aes(x = year, y = popularity), color = 'red', size = 3) +
-  ggtitle("Popularity of the Name 'Luke' (1920-2020)") +
-  xlab("Year") +
-  ylab("Popularity") +
-  theme_minimal()
+
+
+# ggplot(name_data, aes(x = year, y = popularity)) +
+#   geom_line(color = 'blue') +
+#   geom_point(data = name_data %>% filter(year %in% release_years), aes(x = year, y = popularity), color = 'red', size = 3) +
+#   ggtitle("Popularity of the Name 'Luke' (1920-2020)") +
+#   xlab("Year") +
+#   ylab("Popularity") +
+#   theme_minimal()
 
 ```
 
@@ -169,12 +194,12 @@ _type your results and analysis here_
 ```{python}
 # Include and execute your code here
 
-ggplot(luke_data, aes(x = year, y = popularity)) +
-  geom_line(color = 'blue') +
-  ggtitle("Popularity of the Name 'Elliot' (Yearly Data)") +
-  xlab("Year") +
-  ylab("Popularity") +
-  theme_minimal()
+# ggplot(luke_data, aes(x = year, y = popularity)) +
+#   geom_line(color = 'blue') +
+#   ggtitle("Popularity of the Name 'Elliot' (Yearly Data)") +
+#   xlab("Year") +
+#   ylab("Popularity") +
+#   theme_minimal()
 ```
 
 

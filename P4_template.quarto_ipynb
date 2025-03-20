@@ -1,0 +1,383 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Client Report - Can You Predict That?\"\n",
+        "subtitle: \"Course DS 250\"\n",
+        "author: \"[STUDENT NAME]\"\n",
+        "format:\n",
+        "  html:\n",
+        "    self-contained: true\n",
+        "    page-layout: full\n",
+        "    title-block-banner: true\n",
+        "    toc: true\n",
+        "    toc-depth: 3\n",
+        "    toc-location: body\n",
+        "    number-sections: false\n",
+        "    html-math-method: katex\n",
+        "    code-fold: true\n",
+        "    code-summary: \"Show the code\"\n",
+        "    code-overflow: wrap\n",
+        "    code-copy: hover\n",
+        "    code-tools:\n",
+        "        source: false\n",
+        "        toggle: true\n",
+        "        caption: See code\n",
+        "execute: \n",
+        "  warning: false\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "---\n",
+        "\n",
+        "---"
+      ],
+      "id": "ce6cc7c2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "!pip install matplotlib"
+      ],
+      "id": "5dfdccbf",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd \n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "from lets_plot import *\n",
+        " \n",
+        "# add the additional libraries you need to import for ML here\n",
+        "\n",
+        "LetsPlot.setup_html(isolated_frame=True)"
+      ],
+      "id": "c89e6b97",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html\n",
+        "\n",
+        "df = pd.read_csv(\"https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv\")"
+      ],
+      "id": "4b274336",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Elevator pitch\n",
+        "_A SHORT (2-3 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS._ (Note: this is not a summary of the project, but a summary of the results.)\n",
+        "\n",
+        "_A Client has requested this analysis and this is your one shot of what you would say to your boss in a 2 min elevator ride before he takes your report and hands it to the client._\n",
+        "\n",
+        "## QUESTION|TASK 1\n",
+        "\n",
+        "__Create 2-3 charts that evaluate potential relationships between the home variables and `before1980`.__ Explain what you learn from the charts that could help a machine learning algorithm. \n",
+        "\n",
+        "_type your results and analysis here_"
+      ],
+      "id": "9cede560"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Include and execute your code here\n",
+        "average_square_footage = df.groupby(\"before1980\")[\"livearea\"].mean()\n",
+        "plt.bar(average_square_footage.index, average_square_footage.values)\n",
+        "plt.title(\"Average Square Footage by Construction Era\")\n",
+        "plt.xlabel(\"before1980\")\n",
+        "plt.ylabel(\"Square Footage\")\n",
+        "plt.show()\n",
+        "plt.tight_layout()\n",
+        "plt.show()\n",
+        "\n",
+        "\n",
+        "print(\"Column names in df:\", df.columns.tolist())\n",
+        "\n",
+        "\n",
+        "before_1980 = df[df[\"before1980\"] == 1][\"sprice\"]\n",
+        "after_1980 = df[df[\"before1980\"] == 0][\"sprice\"]\n",
+        "\n",
+        "\n",
+        "plt.boxplot([before_1980, after_1980], labels=[\"Before 1980\", \"After 1980\"])\n",
+        "plt.title(\"House Price Distribution by Construction Era\")\n",
+        "plt.ylabel(\"Sale Price\")\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "d0bd0b41",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 2\n",
+        "\n",
+        "__Build a classification model labeling houses as being built “before 1980” or “during or after 1980”.__ Your goal is to reach or exceed 90% accuracy. Explain your final model choice (algorithm, tuning parameters, etc) and describe what other models you tried.  \n",
+        "\n",
+        "_type your results and analysis here_\n",
+        "I chose the Random Forest Classifier as my final model because it consistently outperformed other models and reached a final accuracy of 89.98%, which is very close to the target of 90%. After experimenting with tree depth, minimum leaf size, and number of estimators, the most effective configuration was n_estimators=300, max_depth=20, and min_samples_leaf=1. I tested other models including Decision Tree, Logistic Regression, and KNN, but Random Forest offered the best balance of accuracy and generalization. Further tuning could increase accuracy slightly, but this model provides strong predictive power and meets the project objectives.\n"
+      ],
+      "id": "4f8810f0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import sys\n",
+        "!{sys.executable} -m pip install scikit-learn"
+      ],
+      "id": "036b2eef",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "\n",
+        "features = [\"livearea\", \"sprice\", \"finbsmnt\", \"basement\", \"numbdrm\", \"numbaths\", \"stories\"]\n",
+        "X = df[features]\n",
+        "y = df[\"before1980\"]\n",
+        "\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "final_model = RandomForestClassifier(\n",
+        "    n_estimators=300,\n",
+        "    max_depth=20,\n",
+        "    min_samples_leaf=1,\n",
+        "    random_state=42\n",
+        ")\n",
+        "final_model.fit(X_train, y_train)\n",
+        "y_pred = final_model.predict(X_test)\n",
+        "final_acc = accuracy_score(y_test, y_pred)\n",
+        "print(\"Final Tuned Accuracy:\", round(final_acc * 100, 2), \"%\")\n"
+      ],
+      "id": "de83d9ba",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 3\n",
+        "\n",
+        "__Justify your classification model by discussing the most important features selected by your model.__ This discussion should include a feature importance chart and a description of the features. \n",
+        "\n",
+        "_type your results and analysis here_\n",
+        "\n",
+        "The Random Forest model shows which features mattered most in making predictions. In this case, sale price and living area were the top factors, which makes sense since older homes often have different prices and sizes. Bathroms, bedrooms, basements, and stories also helped, since home layouts and styles have changed over time."
+      ],
+      "id": "0bc5d325"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Include and execute your code here\n",
+        "\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "importances = final_model.feature_importances_\n",
+        "feature_names = X.columns\n",
+        "\n",
+        "\n",
+        "importance_df = pd.DataFrame({\n",
+        "    \"Feature\": feature_names,\n",
+        "    \"Importance\": importances\n",
+        "}).sort_values(by=\"Importance\", ascending=False)\n",
+        "\n",
+        "\n",
+        "print(importance_df)\n",
+        "\n",
+        "plt.figure(figsize=(8, 6))\n",
+        "plt.barh(importance_df[\"Feature\"], importance_df[\"Importance\"])\n",
+        "plt.title(\"Feature Importance\")\n",
+        "plt.xlabel(\"Importance Score\")\n",
+        "plt.ylabel(\"Feature\")\n",
+        "plt.gca().invert_yaxis()  \n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "3ad7b412",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 4\n",
+        "\n",
+        "__Describe the quality of your classification model using 2-3 different evaluation metrics.__ You also need to explain how to interpret each of the evaluation metrics you use.  \n",
+        "\n",
+        "_type your results and analysis here_\n",
+        "My model had a precision of 92%, recall of 92.03%, and F1 scorof 92.01%, showing that it performs well across multiple measures — not just accuracy."
+      ],
+      "id": "d0ea0365"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Include and execute your code here\n",
+        "from sklearn.metrics import precision_score, recall_score, f1_score\n",
+        "\n",
+        "precision = precision_score(y_test, y_pred)\n",
+        "recall = recall_score(y_test, y_pred)\n",
+        "f1 = f1_score(y_test, y_pred)\n",
+        "\n",
+        "print(\"Precision:\", round(precision * 100, 2), \"%\")\n",
+        "print(\"Recall:\", round(recall * 100, 2), \"%\")\n",
+        "print(\"F1 Score:\", round(f1 * 100, 2), \"%\")"
+      ],
+      "id": "52f2bb31",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "\n",
+        "## STRETCH QUESTION|TASK 1\n",
+        "\n",
+        "__Repeat the classification model using 3 different algorithms.__ Display their Feature Importance, and Decision Matrix. Explian the differences between the models and which one you would recommend to the Client.   \n",
+        "\n",
+        "_type your results and analysis here_\n",
+        "I tested three additional classification models. Logistic Regression, K-Nearest Neighbors, and Support Vector Machine. I did this to compare their performance against my Random Forest model.\n",
+        "Logistic Regression performed well, but didn’t the relationships as effectively.\n",
+        "KNN had the lowest accuracy, because of its sensitivity to crazy data and distance-based decisions.\n",
+        "SVM performed better than KNN and LR, but still didn't outperform Random Forest.\n",
+        "Overall, Random Forest still had the highest accuracy and best balance of precision and recall, so I kept it as my final model choice.\n"
+      ],
+      "id": "b638151a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Include and execute your code here\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.neighbors import KNeighborsClassifier\n",
+        "from sklearn.svm import SVC \n",
+        "from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score\n",
+        "\n",
+        "def evaluate_model(model, name):\n",
+        "  model.fit(X_train, y_train)\n",
+        "  y_pred = model.predict(X_test)\n",
+        "\n",
+        "  acc = accuracy_score(y_test, y_pred)\n",
+        "  prec = precision_score(y_test, y_pred)\n",
+        "  rec = recall_score(y_test, y_pred)\n",
+        "  f1 = f1_score(y_test, y_pred)\n",
+        "\n",
+        "  print(f\"\\n{name} Results:\")\n",
+        "  print(f\"Accuracy: {round(acc*100, 2)}%\")\n",
+        "  print(f\"Precision: {round(prec*100, 2)}%\")\n",
+        "  print(f\"Recall: {round(rec*100, 2)}%\")\n",
+        "  print(f\"F1 Score: {round(f1*100, 2)}%\")\n",
+        "\n",
+        "lr_model = LogisticRegression(max_iter=1000)\n",
+        "evaluate_model(lr_model, \"Logistic Regression\")\n",
+        "\n",
+        "knn_model = KNeighborsClassifier(n_neighbors=5)\n",
+        "evaluate_model(knn_model, \"k-Nearest Neighbors\")\n",
+        "svm_model = SVC(kernel='rbf')\n",
+        "evaluate_model(svm_model, \"support Vector Machine\")"
+      ],
+      "id": "8d86d559",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## STRETCH QUESTION|TASK 2\n",
+        "\n",
+        "__Join the `dwellings_neighborhoods_ml.csv` data to the `dwelling_ml.csv` on the `parcel` column to create a new dataset. Duplicate the code for the stretch question above and update it to use this data.__ Explain the differences and if this changes the model you recomend to the Client.   \n",
+        "\n",
+        "_type your results and analysis here_\n"
+      ],
+      "id": "5cffb56a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Include and execute your code here\n"
+      ],
+      "id": "f2e12e29",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## STRETCH QUESTION|TASK 3\n",
+        "\n",
+        "__Can you build a model that predicts the year a house was built?__ Explain the model and the evaluation metrics you would use to determine if the model is good.  \n",
+        "\n",
+        "_type your results and analysis here_\n"
+      ],
+      "id": "bf408c27"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Include and execute your code here\n"
+      ],
+      "id": "35f90c2c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---"
+      ],
+      "id": "c3ffc386"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3.12",
+      "language": "python",
+      "display_name": "Python 3.12 (matplotlib)]",
+      "path": "/Users/mackenziepollock/Library/Jupyter/kernels/python3.12"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

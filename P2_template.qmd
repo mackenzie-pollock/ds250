@@ -176,7 +176,7 @@ ORDER BY avg_salary DESC
 LIMIT 5;
 """
 results = pd.read_sql_query(q, con)
-results
+results 
 
 ```
 

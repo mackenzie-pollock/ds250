@@ -23,18 +23,15 @@ format:
 execute: 
   warning: false
 
-!pip install matplotlib
 
-jupyter: python3
-execute:
-  python: "/Users/mackenziepollock/ds250_env/bin/python3"
+
+
+
 ---
 ---
 
 ```{python}
-import sys
-print(sys.executable)
-
+!pip install matplotlib
 ```
 
 ```{python}

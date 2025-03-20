@@ -39,16 +39,20 @@ df.distance_reported = df.distance_reported.replace(np.nan, df.distance_reported
 
 
 ```{python}
-df2 = df.assign(distance_reported2 = lambda x: x.distance_reported / 1000,
-                 # distance_reported = df.distance_reported / 1000
-                new_size = np.where(df.estimated.size > 10000,
-                                    df.estimated_size / 144,
-                                    df.estimated_size)
 
+
+df2 = df.assign(
+    distance_reported2 = lambda x: x.distance_reported / 1000,
+    new_size = np.where(df.estimated_size > 10000,
+                        df.estimated_size / 144,
+                        df.estimated_size)
+)
+df2['new_size_alt'] = np.where(
+    df.city.isin(['Holyoke', 'Crater Lake', 'Los Angeles', 'San Diego', 'Dallas']), 
+    df.estimated_size / 144,
+    df.estimated_size
 )
 
-df['new _size'] = np.where(df.city.isin(['Holyoke', 'Crater Lake', 'Los Angeles', 'San Diego', 'Dallas']), 
-        df.estimated_size / 144, df.estimated_size) # alternative way to do it
 ```
 
 create a table that contains some summary stats: mean and median of size for each shape. 
@@ -56,11 +60,13 @@ create a table that contains some summary stats: mean and median of size for eac
 
 ```{python}
 df_spence = (
-df2.groupby('shape_reported')
-     .aggregate(med_size = ('new_size','median')),
-                mean_size = ('new_size', 'mean'),
-                how_many = ('shape_reported', 'size')
-    .reset_index()
+    df2.groupby('shape_reported')
+       .agg(
+           med_size = ('new_size', 'median'),
+           mean_size = ('new_size', 'mean'),
+           how_many = ('shape_reported', 'size')
+       )
+       .reset_index()
 )
 ```
 
@@ -68,8 +74,13 @@ lets plot the mean size by the shape
 
 
 ```{python}
-ggplot(data = df_spence.sort_values('mean_size', ascending = False)) +
-ggplot(data = df_spence) + geom_bar(aes(x = 'shape_reported', y = 'mena_size'), stat = 'identity')
+(
+    ggplot(data=df_spence.sort_values('mean_size', ascending=False)) +
+    geom_bar(aes(x='shape_reported', y='mean_size'), stat='identity') +
+    labs(title='Average Size by Shape Reported', x='Shape', y='Mean Size') +
+    theme_minimal()
+)
+
 ```
 
 
@@ -87,5 +98,5 @@ lets try melting the data into longer format
 
 
 ```{python}
-pd.melt(df_spence, id_vaars = ['shape_reported', 'how_many', 'shape_cat'], var_name = 'source', value_name = 'size')
+pd.melt(df_spence, id_vars = ['shape_reported', 'how_many', 'shape_cat'], var_name = 'source', value_name = 'size')
 ```
