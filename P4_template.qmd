@@ -23,10 +23,8 @@ format:
 execute: 
   warning: false
 
-
-
-
-
+project:
+  output-dir: docs
 ---
 ---
 
