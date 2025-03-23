@@ -4823,7 +4823,7 @@ vertical-align: -.125em;
   <li><a href="#stretch-questiontask-3" id="toc-stretch-questiontask-3">STRETCH QUESTION|TASK 3</a></li>
   </ul>
 </nav>
-<div id="c323c414" class="cell" data-execution_count="1">
+<div id="bb142bb7" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
@@ -4836,7 +4836,7 @@ vertical-align: -.125em;
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>LetsPlot.setup_html(isolated_frame<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="8873e140" class="cell" data-execution_count="2">
+<div id="c24be0ab" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html</span></span>
@@ -4853,7 +4853,7 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="questiontask-1">QUESTION|TASK 1</h2>
 <p><strong>Create 2-3 charts that evaluate potential relationships between the home variables and <code>before1980</code>.</strong> Explain what you learn from the charts that could help a machine learning algorithm.</p>
 <p><em>type your results and analysis here</em></p>
-<div id="c4a26252" class="cell" data-execution_count="3">
+<div id="6708cac6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span>
@@ -4906,7 +4906,7 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="questiontask-2">QUESTION|TASK 2</h2>
 <p><strong>Build a classification model labeling houses as being built “before 1980” or “during or after 1980”.</strong> Your goal is to reach or exceed 90% accuracy. Explain your final model choice (algorithm, tuning parameters, etc) and describe what other models you tried.</p>
 <p><em>type your results and analysis here</em> I chose the Random Forest Classifier as my final model because it consistently outperformed other models and reached a final accuracy of 89.98%, which is very close to the target of 90%. After experimenting with tree depth, minimum leaf size, and number of estimators, the most effective configuration was n_estimators=300, max_depth=20, and min_samples_leaf=1. I tested other models including Decision Tree, Logistic Regression, and KNN, but Random Forest offered the best balance of accuracy and generalization. Further tuning could increase accuracy slightly, but this model provides strong predictive power and meets the project objectives.</p>
-<div id="3198b6bb" class="cell" data-execution_count="4">
+<div id="a993b127" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
@@ -4940,7 +4940,7 @@ vertical-align: -.125em;
 <p><strong>Justify your classification model by discussing the most important features selected by your model.</strong> This discussion should include a feature importance chart and a description of the features.</p>
 <p><em>type your results and analysis here</em></p>
 <p>The Random Forest model shows which features mattered most in making predictions. In this case, sale price and living area were the top factors, which makes sense since older homes often have different prices and sizes. Bathroms, bedrooms, basements, and stories also helped, since home layouts and styles have changed over time.</p>
-<div id="2522149b" class="cell" data-execution_count="5">
+<div id="032b2e67" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span>
@@ -4992,7 +4992,7 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="questiontask-4">QUESTION|TASK 4</h2>
 <p><strong>Describe the quality of your classification model using 2-3 different evaluation metrics.</strong> You also need to explain how to interpret each of the evaluation metrics you use.</p>
 <p><em>type your results and analysis here</em> My model had a precision of 92%, recall of 92.03%, and F1 scorof 92.01%, showing that it performs well across multiple measures — not just accuracy.</p>
-<div id="3e606cdb" class="cell" data-execution_count="6">
+<div id="4cba43c1" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span>
@@ -5018,7 +5018,7 @@ F1 Score: 92.01 %</code></pre>
 <h2 class="anchored" data-anchor-id="stretch-questiontask-1">STRETCH QUESTION|TASK 1</h2>
 <p><strong>Repeat the classification model using 3 different algorithms.</strong> Display their Feature Importance, and Decision Matrix. Explian the differences between the models and which one you would recommend to the Client.</p>
 <p><em>type your results and analysis here</em> I tested three additional classification models. Logistic Regression, K-Nearest Neighbors, and Support Vector Machine. I did this to compare their performance against my Random Forest model. Logistic Regression performed well, but didn’t the relationships as effectively. KNN had the lowest accuracy, because of its sensitivity to crazy data and distance-based decisions. SVM performed better than KNN and LR, but still didn’t outperform Random Forest. Overall, Random Forest still had the highest accuracy and best balance of precision and recall, so I kept it as my final model choice.</p>
-<div id="d417f376" class="cell" data-execution_count="7">
+<div id="f63ce8eb" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span>
@@ -5077,7 +5077,7 @@ F1 Score: 78.52%</code></pre>
 <h2 class="anchored" data-anchor-id="stretch-questiontask-2">STRETCH QUESTION|TASK 2</h2>
 <p><strong>Join the <code>dwellings_neighborhoods_ml.csv</code> data to the <code>dwelling_ml.csv</code> on the <code>parcel</code> column to create a new dataset. Duplicate the code for the stretch question above and update it to use this data.</strong> Explain the differences and if this changes the model you recomend to the Client.</p>
 <p><em>type your results and analysis here</em></p>
-<div id="6401cc7d" class="cell" data-execution_count="8">
+<div id="4b781fad" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -5088,7 +5088,7 @@ F1 Score: 78.52%</code></pre>
 <h2 class="anchored" data-anchor-id="stretch-questiontask-3">STRETCH QUESTION|TASK 3</h2>
 <p><strong>Can you build a model that predicts the year a house was built?</strong> Explain the model and the evaluation metrics you would use to determine if the model is good.</p>
 <p><em>type your results and analysis here</em></p>
-<div id="23567ea8" class="cell" data-execution_count="9">
+<div id="1127c562" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
